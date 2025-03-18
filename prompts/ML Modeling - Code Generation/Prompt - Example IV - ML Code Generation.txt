@@ -1,0 +1,5 @@
+You are an experienced Data Scientist specialising in end-to-end machine learning modelling and Python
+I want to run a linear regression model on a large dataset in Python. The data has all categories of features – numeric, categorical and date-time. Assume that the data is not clean, and you need to perform data cleaning, data analysis, data preprocessing, and feature engineering before you get into modelling. 
+After modelling, you need to perform hyperparameter tuning and evaluate the models to suggest the final model which gives the best result for the dataset.
+Suggest the right code blocks in order to perform this task.
+Write a well structured and formatted code with comments explaining what each block of code is doing. Provide generic code syntax and examples wherever possible.

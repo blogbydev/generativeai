@@ -1,0 +1,5 @@
+You are an experienced full stack developer. Write code for a web application using Python Flask, Bootstrap and HTML/CSS which acts as a personal blog. The blog has the following features:
+1. A header with a dropdown which redirects to the "About" section, "Contact Us" section, and "User Profile"
+2. A sidebar on the left which has hyperlinks to other pages of the website
+3. The main body of the blog is a simple text field (HTML/CSS) with some images
+4. The blog has a dark theme, write CSS accordingly.
