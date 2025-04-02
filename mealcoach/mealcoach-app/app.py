@@ -54,7 +54,7 @@ def is_flagged_text(user_input):
 def append_message_to_conversation(conversation_log, message, role):
     conversation_log.append({"role": role, "content": message})
 
-def initialize_conversation():
+def initialize_conversation(username):
     sample_food_categories = "Vegan, Vegetarian, etc."
     sample_food_ingredient = "Tofu, Rice, Chicken, etc."
     
@@ -94,6 +94,7 @@ def initialize_conversation():
 
     {delimiter}
     Start by greeting the user and introducing yourself.
+    The user's name is {username}.
     
     """
 
@@ -227,10 +228,11 @@ def meal_planner():
         username = request.form.get('username')
         conversation_log = []
         meal_details = []
-        conversation_log.append(initialize_conversation())
+        conversation_log.append(initialize_conversation(username))
         response = get_chat_model_completions(conversation_log, themealdb_tools)
         append_message_to_conversation(conversation_log, response, 'assistant')
-    print('########## meal details')
+    print('############conversation log')
+    print(conversation_log)
     return render_template('meal-planner.html',username=username, conversation_log=conversation_log, meal_details=meal_details)
 
 
@@ -250,18 +252,21 @@ def conversation_handler():
     is_intent_confirmed = intent_confirmation(response)
     if(is_intent_confirmed == 'yes'):
         print('Intent confirmed')
-        meals_suggesed_by_assistant = extract_python_dictionary(response)
-        # append_message_to_conversation(conversation_log, json.dumps(meals_suggesed_by_assistant), 'assistant')
+        conversation_log.pop()
+        append_message_to_conversation(conversation_log, "Thank you for providing your inputs, let me show you some recipes", 'assistant')
+        meals_suggested_by_assistant = extract_python_dictionary(response)
         meals = []
-        for meal_suggested in meals_suggesed_by_assistant:
+
+        if isinstance(meals_suggested_by_assistant, dict) and 'meals' in meals_suggested_by_assistant:
+            meals_suggested_by_assistant = meals_suggested_by_assistant['meals']
+
+        for meal_suggested in meals_suggested_by_assistant:
             main_ingredient = meal_suggested['main_ingredient']
             print(main_ingredient)
             meals_available = themealdbapi.filter_meal_by_ingredient([main_ingredient])
             if meals_available['meals'] != None:
                 meals.extend(meals_available['meals'])
-        print(meals)
         meal_ids = [meal['idMeal'] for meal in meals]
-        # append_message_to_conversation(conversation_log, str(meal_ids), 'assistant')
         # select top 5 meals
         meal_ids = list(set(meal_ids))[:5]
         for meal_id in meal_ids:
